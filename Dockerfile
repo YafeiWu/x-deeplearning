@@ -5,11 +5,10 @@ RUN apt-get update --fix-missing && \
     apt-get install -y apt-transport-https ca-certificates && \
     apt-get install -y swig && \
     apt-get install -y git && \
-    pip install snakebite
+    pip install sklearn
 
 RUN git clone -b tdm.v1.2 https://github.com/YafeiWu/x-deeplearning.git /xdeeplearning && \
-    git submodule update --init --recursive && \
-    /xdeeplearning/xdl/test/binary/hadoop-2.8.5/run.sh && \
+    cd /xdeeplearning && git submodule update --init --recursive && \
     cp -r /xdeeplearning/xdl-algorithm-solution/TDM/script/tdm_ub_att_ubuntu/ "$WORKPATH" && \
     cd /xdeeplearning/xdl-algorithm-solution/TDM/src && \
     mkdir build && cd build && \
@@ -19,6 +18,12 @@ RUN git clone -b tdm.v1.2 https://github.com/YafeiWu/x-deeplearning.git /xdeeple
     cp -r ../python/dist_tree/dist_tree/ "$WORKPATH" && \
     cp -r ../python/cluster/ "$WORKPATH" && \
     cp tdm/lib*.so "$WORKPATH" && \
+    cp -r /xdeeplearning/xdl/test/binary/hadoop-2.8.5 "$WORKPATH"/hadoop && \
+    cd $WORKPATH/hadoop && ./run.sh && \
+    rm -r /xdeeplearning && \
     cd $WORKPATH
 
 WORKDIR $WORKPATH
+
+ENV PATH=$PATH:$WORKPATH/hadoop/bin
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORKPATH

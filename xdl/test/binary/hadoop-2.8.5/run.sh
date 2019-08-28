@@ -9,5 +9,3 @@ echo Y|bin/hdfs namenode -format
 echo Y|bin/hdfs datanode -format
 sbin/start-dfs.sh
 #bin/hdfs dfs -put ../../test_data hdfs://127.0.0.1:9090/
-export PATH=$PATH:`pwd`/bin
-export HADOOP_USER_NAME=video
